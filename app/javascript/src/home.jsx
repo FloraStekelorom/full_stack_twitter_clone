@@ -66,4 +66,33 @@ document.addEventListener('DOMContentLoaded', () => {
     <Home />,
     document.body.appendChild(document.createElement('div')),
   )
+
+  $(".home").ready(function(){
+
+  //------------------ changing background image ---------------------
+  var backgroundURL = [
+    "../images/background_2.png",
+    "../images/background_3.jpg",
+    "../images/background_1.png",
+  ];
+
+  var backStep = 0;
+
+  var backgroundTimer = setInterval(function(){
+    backStep++;
+    if(backStep == backgroundURL.length) {
+      backStep = 0;
+    };
+    var imageUrl = backgroundURL[backStep];
+    setTimeout(function(){
+      $('#homeback').fadeOut(1000, function(){
+        $('#homeback').css('background-image', 'url(' + imageUrl + ')');
+        $('#homeback').fadeIn(1000);
+      });
+    });
+  }, 10000);
+
+  });
+
+
 })

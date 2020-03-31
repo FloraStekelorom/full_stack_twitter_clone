@@ -5,7 +5,7 @@ import './layout.scss';
 const Layout = (props) => {
   return (
     <React.Fragment>
-      <nav class="navbar navbar-default navbar-fixed-top">
+      <nav class="navbar-default navbar-fixed-top">
         <div class="container">
           <div class="navbar-header">
             <a class="navbar-brand" href="#">
@@ -14,7 +14,7 @@ const Layout = (props) => {
           </div>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">language: <strong>English </strong><span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">language: <strong>English </strong></a>
               <ul class="dropdown-menu row" role="menu">
                 <li class="col-xs-12"><a href="#">Bahasa Malaya</a></li>
                 <li class="col-xs-12"><a href="#">Dansk</a></li>
@@ -25,7 +25,7 @@ const Layout = (props) => {
           </ul>
         </div>
       </nav>
-      <div className="container py-3">
+      <div>
         {props.children}
       </div>
     </React.Fragment>
