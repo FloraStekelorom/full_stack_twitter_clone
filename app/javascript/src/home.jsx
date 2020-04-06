@@ -15,27 +15,51 @@ const backgroundURL = [
 ]
 
 class Home extends React.Component {
-  state = {
+constructor(props) {
+  super(props);
+  this.state = {
     backStep: 0,
+    usernameInput: '',
+    emailInput: '',
+    passwordInput: '',
+  }
+  this.handleChange = this.handleChange.bind(this);
+  this.handleSubmit = this.handleSubmit.bind(this);
+}
+componentDidMount () {
+  this.backgroundTimer = window.setInterval(() => {
+    let backStep = this.state.backStep + 1;
+    if (backStep == backgroundURL.length) {
+      backStep = 0;
+    };
+    this.setState({ backStep });
+  }, 8000);
+}
+componentWillUnmount () {
+  window.clearInterval(this.backgroundTimer);
+}
+handleChange(event) {
+  const { name, value } = event.target;
+  this.setState({ [name]: value });
+}
+handleSubmit(event) {
+  event.preventDefault();
+  const { usernameInput, emailInput, passwordInput } = this.state;
+    this.props.onSubmit({
+      usernameInput,
+      emailInput,
+      passwordInput
+    });
+    this.setState({
+      usernameInput: '',
+      emailInput: '',
+      passwordInput: '',
+    })
   }
 
-  componentDidMount () {
-    this.backgroundTimer = window.setInterval(() => {
-      let backStep = this.state.backStep + 1;
-
-      if (backStep == backgroundURL.length) {
-        backStep = 0;
-      };
-      this.setState({ backStep });
-    }, 10000);
-  }
-
-  componentWillUnmount () {
-    window.clearInterval(this.backgroundTimer);
-  }
-
-  render () {
-    const backgroundImg = backgroundURL[this.state.backStep];
+render () {
+  const backgroundImg = backgroundURL[this.state.backStep];
+  const {usernameInput, emailInput, passwordInput} = this.state;
 
     return (
       <Layout>
@@ -54,12 +78,12 @@ class Home extends React.Component {
                   <p><a href="#" id="twit-account">Tweet and photo by @Hackpacific<br/>3:20 PM - 15 December 2016</a></p>
                 </div>
                 <div className="log-in col-xs-4 col-xs-offset-1">
-                  <form>
+                  <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
-                      <input type="text" className="form-control username" placeholder="Username"/>
+                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={usernameInput} required/>
                     </div>
                     <div className="form-group col-xs-8">
-                      <input type="password" className="form-control password" placeholder="Password"/>
+                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={passwordInput} required/>
                     </div>
                     <button id="log-in-btn" className="btn btn-default btn-primary col-xs-3 col-xs-offset-1">Log in</button>
                     <label>
@@ -71,20 +95,20 @@ class Home extends React.Component {
                   </form>
                 </div>
                 <div className="sign-up col-xs-4 col-xs-offset-1">
-                  <form>
+                  <form onSubmit={this.handleSubmit}>
                     <div className="new-to-t">
                       <p><strong>New to Twitter?</strong><span> Sign Up</span></p>
                     </div>
                     <div className="form-group">
-                      <input type="text" className="form-control username" placeholder="Username"/>
+                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={usernameInput} required />
                     </div>
                     <div className="form-group">
-                      <input type="email" className="form-control email" placeholder="Email"/>
+                      <input type="email" className="form-control email" placeholder="Email" onChange={this.handleChange} value={emailInput} required />
                     </div>
                     <div className="form-group">
-                      <input type="password" className="form-control password" placeholder="Password"/>
+                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={passwordInput} required />
                     </div>
-                    <button id="sign-up-btn" className="btn btn-default btn-warning pull-right">Sign up for Twitter</button>
+                    <button id="sign-up-btn" className="btn btn-default btn-warning pull-right" onClick={this.signup}>Sign up for Twitter</button>
                   </form>
                 </div>
               </div>
@@ -101,35 +125,4 @@ document.addEventListener('DOMContentLoaded', () => {
     <Home />,
     document.body.appendChild(document.createElement('div')),
   )
-
-  // Should not use jQuery with React, should use React lifecycle for those things.
-
-  // $(".home").ready(function(){
-
-  //------------------ changing background image ---------------------
-  // var backgroundURL = [
-  //   "../images/background_2.png",
-  //   "../images/background_3.jpg",
-  //   "../images/background_1.png",
-  // ];
-
-  // var backStep = 0;
-
-  // var backgroundTimer = setInterval(function(){
-  //   backStep++;
-  //   if(backStep == backgroundURL.length) {
-  //     backStep = 0;
-  //   };
-  //   var imageUrl = backgroundURL[backStep];
-  //   setTimeout(function(){
-  //     $('#homeback').fadeOut(1000, function(){
-  //       $('#homeback').css('background-image', 'url(' + imageUrl + ')');
-  //       $('#homeback').fadeIn(1000);
-  //     });
-  //   });
-  // }, 10000);
-
-  // });
-
-
 })
