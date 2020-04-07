@@ -17,14 +17,19 @@ const backgroundURL = [
 class Home extends React.Component {
 constructor(props) {
   super(props);
+
   this.state = {
     backStep: 0,
-    usernameInput: '',
-    emailInput: '',
-    passwordInput: '',
+    login_username: '',
+    login_password: '',
+    signup_username: '',
+    signup_email: '',
+    signup_password: '',
   }
+
   this.handleChange = this.handleChange.bind(this);
-  this.handleSubmit = this.handleSubmit.bind(this);
+  this.handleLogin = this.handleLogin.bind(this);
+  this.handleSignup = this.handleSignup.bind(this);
 }
 componentDidMount () {
   this.backgroundTimer = window.setInterval(() => {
@@ -35,27 +40,37 @@ componentDidMount () {
     this.setState({ backStep });
   }, 8000);
 }
+
 componentWillUnmount () {
   window.clearInterval(this.backgroundTimer);
 }
+
 handleChange(event) {
   const { name, value } = event.target;
   this.setState({ [name]: value });
 }
-handleSubmit(event) {
+
+handleLogin(event) {
   event.preventDefault();
-  const { usernameInput, emailInput, passwordInput } = this.state;
-    this.props.onSubmit({
-      usernameInput,
-      emailInput,
-      passwordInput
-    });
-    this.setState({
-      usernameInput: '',
-      emailInput: '',
-      passwordInput: '',
-    })
-  }
+  const { login_username, login_password } = this.state;
+  // this.props.onSubmit({
+  //   usernameInput,
+  //   emailInput,
+  //   passwordInput
+  // });
+  // --------------- You should be using a fetch request to make an API call here to the backend
+}
+
+handleSignup(event) {
+  event.preventDefault();
+  const { signup_email, signup_password, signup_username } = this.state;
+  // this.props.onSubmit({
+  //   usernameInput,
+  //   emailInput,
+  //   passwordInput
+  // });
+  // --------------- You should be using a fetch request to make an API call here to the backend
+}
 
 render () {
   const backgroundImg = backgroundURL[this.state.backStep];
@@ -78,12 +93,12 @@ render () {
                   <p><a href="#" id="twit-account">Tweet and photo by @Hackpacific<br/>3:20 PM - 15 December 2016</a></p>
                 </div>
                 <div className="log-in col-xs-4 col-xs-offset-1">
-                  <form onSubmit={this.handleSubmit}>
+                  <form onSubmit={this.handleLogin}>
                     <div className="form-group">
-                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={usernameInput} required/>
+                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={usernameInput} name="login_username" required/>
                     </div>
                     <div className="form-group col-xs-8">
-                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={passwordInput} required/>
+                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={passwordInput} name="login_password" required/>
                     </div>
                     <button id="log-in-btn" className="btn btn-default btn-primary col-xs-3 col-xs-offset-1">Log in</button>
                     <label>
@@ -95,18 +110,18 @@ render () {
                   </form>
                 </div>
                 <div className="sign-up col-xs-4 col-xs-offset-1">
-                  <form onSubmit={this.handleSubmit}>
+                  <form onSubmit={this.handleSignup}>
                     <div className="new-to-t">
                       <p><strong>New to Twitter?</strong><span> Sign Up</span></p>
                     </div>
                     <div className="form-group">
-                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={usernameInput} required />
+                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={usernameInput} name="signup_username" required />
                     </div>
                     <div className="form-group">
-                      <input type="email" className="form-control email" placeholder="Email" onChange={this.handleChange} value={emailInput} required />
+                      <input type="email" className="form-control email" placeholder="Email" onChange={this.handleChange} value={emailInput} name="signup_email" required />
                     </div>
                     <div className="form-group">
-                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={passwordInput} required />
+                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={passwordInput} name="signup_password" required />
                     </div>
                     <button id="sign-up-btn" className="btn btn-default btn-warning pull-right" onClick={this.signup}>Sign up for Twitter</button>
                   </form>
