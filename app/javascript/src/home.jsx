@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Layout from './layout';
+import { safeCredentials, handleErrors } from './utils/fetchHelper';
 
 import './home.scss';
 
@@ -53,17 +54,27 @@ handleChange(event) {
 handleLogin(event) {
   event.preventDefault();
   const { login_username, login_password } = this.state;
-  // this.props.onSubmit({
-  //   usernameInput,
-  //   emailInput,
-  //   passwordInput
-  // });
-  // --------------- You should be using a fetch request to make an API call here to the backend
+
+    fetch(`/users`, safeCredentials({
+      method: 'POST',
+      body: JSON.stringify({
+        users: {
+          username: login_username,
+          password: login_password
+        }
+      })
+    }))
+    .then(handleErrors)
+    .then(res => {
+      console.log(res);
+    })
+  window.location.replace("/feed");
 }
 
 handleSignup(event) {
   event.preventDefault();
   const { signup_email, signup_password, signup_username } = this.state;
+
   // this.props.onSubmit({
   //   usernameInput,
   //   emailInput,
@@ -74,7 +85,7 @@ handleSignup(event) {
 
 render () {
   const backgroundImg = backgroundURL[this.state.backStep];
-  const {usernameInput, emailInput, passwordInput} = this.state;
+  const {login_username, login_password, signup_email, signup_username, signup_password} = this.state;
 
     return (
       <Layout>
@@ -95,10 +106,10 @@ render () {
                 <div className="log-in col-xs-4 col-xs-offset-1">
                   <form onSubmit={this.handleLogin}>
                     <div className="form-group">
-                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={usernameInput} name="login_username" required/>
+                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={login_username} name="login_username" required/>
                     </div>
                     <div className="form-group col-xs-8">
-                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={passwordInput} name="login_password" required/>
+                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={login_password} name="login_password" required/>
                     </div>
                     <button id="log-in-btn" className="btn btn-default btn-primary col-xs-3 col-xs-offset-1">Log in</button>
                     <label>
@@ -115,13 +126,13 @@ render () {
                       <p><strong>New to Twitter?</strong><span> Sign Up</span></p>
                     </div>
                     <div className="form-group">
-                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={usernameInput} name="signup_username" required />
+                      <input type="text" className="form-control username" placeholder="Username" onChange={this.handleChange} value={signup_username} name="signup_username" required />
                     </div>
                     <div className="form-group">
-                      <input type="email" className="form-control email" placeholder="Email" onChange={this.handleChange} value={emailInput} name="signup_email" required />
+                      <input type="email" className="form-control email" placeholder="Email" onChange={this.handleChange} value={signup_email} name="signup_email" required />
                     </div>
                     <div className="form-group">
-                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={passwordInput} name="signup_password" required />
+                      <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={signup_password} name="signup_password" required />
                     </div>
                     <button id="sign-up-btn" className="btn btn-default btn-warning pull-right" onClick={this.signup}>Sign up for Twitter</button>
                   </form>
