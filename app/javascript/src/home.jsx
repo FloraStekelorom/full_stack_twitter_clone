@@ -55,32 +55,41 @@ handleLogin(event) {
   event.preventDefault();
   const { login_username, login_password } = this.state;
 
-    fetch(`/users`, safeCredentials({
-      method: 'POST',
-      body: JSON.stringify({
-        users: {
-          username: login_username,
-          password: login_password
-        }
-      })
-    }))
-    .then(handleErrors)
-    .then(res => {
-      console.log(res);
+  fetch(`api/sessions`, safeCredentials({
+    method: 'POST',
+    body: JSON.stringify({
+      user: {
+        username: login_username,
+        password: login_password
+      }
     })
-  window.location.replace("/feed");
+  }))
+  .then(handleErrors)
+  .then(res => {
+    console.log(res);
+    window.location.replace("/feeds");
+  })
 }
 
 handleSignup(event) {
   event.preventDefault();
   const { signup_email, signup_password, signup_username } = this.state;
 
-  // this.props.onSubmit({
-  //   usernameInput,
-  //   emailInput,
-  //   passwordInput
-  // });
-  // --------------- You should be using a fetch request to make an API call here to the backend
+  fetch(`api/users`, safeCredentials({
+    method: 'POST',
+    body: JSON.stringify({
+      user: {
+        username: signup_username,
+        email: signup_email,
+        password: signup_password,
+      }
+    })
+  }))
+  .then(handleErrors)
+  .then(res => {
+    console.log(res);
+    window.location.replace("/feeds");
+  })
 }
 
 render () {
@@ -134,7 +143,7 @@ render () {
                     <div className="form-group">
                       <input type="password" className="form-control password" placeholder="Password" onChange={this.handleChange} value={signup_password} name="signup_password" required />
                     </div>
-                    <button id="sign-up-btn" className="btn btn-default btn-warning pull-right" onClick={this.signup}>Sign up for Twitter</button>
+                    <button id="sign-up-btn" className="btn btn-default btn-warning pull-right">Sign up for Twitter</button>
                   </form>
                 </div>
               </div>
