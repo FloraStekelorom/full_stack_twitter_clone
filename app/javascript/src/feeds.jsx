@@ -5,7 +5,9 @@ import Navbar from './navbar';
 import './feeds.scss';
 
 class Feed extends React.Component {
+
   render () {
+
     return (
       <Navbar>
         <div id="feedPage">
