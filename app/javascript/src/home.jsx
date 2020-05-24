@@ -55,7 +55,7 @@ handleLogin(event) {
   event.preventDefault();
   const { login_username, login_password } = this.state;
 
-  fetch(`api/sessions`, safeCredentials({
+  fetch(`/api/sessions`, safeCredentials({
     method: 'POST',
     body: JSON.stringify({
       user: {
@@ -75,7 +75,7 @@ handleSignup(event) {
   event.preventDefault();
   const { signup_email, signup_password, signup_username } = this.state;
 
-  fetch(`api/users`, safeCredentials({
+  fetch(`/api/users`, safeCredentials({
     method: 'POST',
     body: JSON.stringify({
       user: {

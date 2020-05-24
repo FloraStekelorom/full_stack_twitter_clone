@@ -2,24 +2,32 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { safeCredentials, handleErrors } from './utils/fetchHelper';
 
-
 import './navbar.scss';
 
 class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: '',
+      currentUser: 'User',
     }
     this.handleLogout = this.handleLogout.bind(this);
   }
 
+componentDidMount () {
+    fetch(`/api/authenticated`, safeCredentials({
+      method: 'GET',
+    }))
+    .then(handleErrors)
+    .then(res => {
+      console.log(res);
+      this.setState({ currentUser: res.username });
+    })
+}
+
   handleLogout(event) {
     event.preventDefault();
-    const { currentUser } = this.state;
-
-    fetch(`api/authenticated`, safeCredentials({
-      method: 'GET',
+    fetch(`/api/sessions`, safeCredentials({
+      method: 'DELETE',
     }))
     .then(handleErrors)
     .then(res => {
@@ -42,9 +50,9 @@ class Navbar extends React.Component {
             </div>
             <ul className="nav navbar-nav navbar-right">
               <li className="dropdown">
-                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="user-icon">User</span></a>
+                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span id="user-icon">{currentUser}</span></a>
                 <ul className="dropdown-menu row" role="menu">
-                  <li ><a href="#" className="username">User</a></li>
+                  <li ><a href="#" className="username">{currentUser}</a></li>
                   <li role="presentation" className="divider"></li>
                   <li ><a href="#">Lists</a></li>
                   <li role="presentation" className="divider"></li>
