@@ -14,28 +14,28 @@ class Navbar extends React.Component {
   }
 
 componentDidMount () {
-    fetch(`/api/authenticated`, safeCredentials({
-      method: 'GET',
-    }))
-    .then(handleErrors)
-    .then(res => {
-      console.log(res);
-      this.setState({ currentUser: res.username });
-    })
+  fetch(`/api/authenticated`, safeCredentials({
+    method: 'GET',
+  }))
+  .then(handleErrors)
+  .then(res => {
+    console.log(res);
+    this.setState({ currentUser: res.username });
+  })
 }
 
-  handleLogout(event) {
-    event.preventDefault();
-    fetch(`/api/sessions`, safeCredentials({
-      method: 'DELETE',
-    }))
-    .then(handleErrors)
-    .then(res => {
-      console.log(res);
-      window.location.replace("/");
-    })
-  }
 
+handleLogout(event) {
+  event.preventDefault();
+  fetch(`/api/sessions`, safeCredentials({
+    method: 'DELETE',
+  }))
+  .then(handleErrors)
+  .then(res => {
+    console.log(res);
+    window.location.replace("/");
+  })
+}
   render () {
     const {currentUser} = this.state;
 
