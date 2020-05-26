@@ -88,6 +88,7 @@ handleSignup(event) {
   .then(handleErrors)
   .then(res => {
     console.log(res);
+    console.log(signup_email, signup_password, signup_username);
   })
 }
 

@@ -12,8 +12,10 @@ class Feed extends React.Component {
     this.state = {
       currentUser: 'User',
       userTweet: '',
-      charNumber: 0,
+      charCount: 0,
+      tweetButton: true,
     }
+    this.countChar = this.countChar.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -34,18 +36,24 @@ class Feed extends React.Component {
     this.setState({ [name]: value });
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  countChar() {
     let {userTweet} = this.state;
-    let charCount = userTweet.length;
-
     userTweet = userTweet.trim();
-    charCount = userTweet.length;
-    console.log(charCount);
+
+    let {charCount} = this.state;
+    charCount =  userTweet.length;
 
     if (charCount > 0 && charCount <= 140) {
-      console.log('writing');
+      this.setState({tweetButton:false});
+      console.log(charCount);
+    } else {
+      console.log(charCount);
+      this.setState({tweetButton:true});
     }
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
 
     //let {userTweet} = this.state;
     //userTweet = userTweet.trim();
@@ -72,7 +80,7 @@ class Feed extends React.Component {
   }
 
   render () {
-    const {currentUser, userTweet, charNumber} = this.state;
+    const {currentUser, userTweet, charCount, tweetButton } = this.state;
 
     return (
       <Navbar>
@@ -125,10 +133,10 @@ class Feed extends React.Component {
             <div className="col-xs-6 feed-box">
               <div className="col-xs-12 post-tweet-box">
                 <form onSubmit={this.handleSubmit} className="form-inline my-4">
-                  <input type="text" className="form-control" placeholder="What's happening?" value={userTweet} onChange={this.handleChange} name="userTweet" required/>
+                  <input type="text" className="form-control" placeholder="What's happening?" value={userTweet} onKeyUp={this.countChar} onChange={this.handleChange} name="userTweet" required/>
                   <div className="pull-right">
                     <span className="post-char-counter">140</span>
-                    <button className="btn btn-primary" id="post-tweet-btn">Tweet</button>
+                    <button className="btn btn-primary" disabled={tweetButton} id="post-tweet-btn">Tweet</button>
                   </div>
                 </form>
               </div>
