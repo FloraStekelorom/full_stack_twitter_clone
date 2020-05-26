@@ -67,7 +67,7 @@ handleLogin(event) {
   .then(handleErrors)
   .then(res => {
     console.log(res);
-    window.location.replace("/feeds");
+      window.location.replace("/feeds");
   })
 }
 
@@ -88,7 +88,6 @@ handleSignup(event) {
   .then(handleErrors)
   .then(res => {
     console.log(res);
-    window.location.replace("/feeds");
   })
 }
 

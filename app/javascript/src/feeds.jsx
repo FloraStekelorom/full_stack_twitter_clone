@@ -11,10 +11,14 @@ class Feed extends React.Component {
     super(props);
     this.state = {
       currentUser: 'User',
+      userTweet: '',
+      charNumber: 0,
     }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-componentDidMount () {
+  componentDidMount () {
     fetch(`/api/authenticated`, safeCredentials({
       method: 'GET',
     }))
@@ -23,10 +27,52 @@ componentDidMount () {
       console.log(res);
       this.setState({ currentUser: res.username });
     })
-}
+  }
+
+  handleChange(event) {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    let {userTweet} = this.state;
+    let charCount = userTweet.length;
+
+    userTweet = userTweet.trim();
+    charCount = userTweet.length;
+    console.log(charCount);
+
+    if (charCount > 0 && charCount <= 140) {
+      console.log('writing');
+    }
+
+    //let {userTweet} = this.state;
+    //userTweet = userTweet.trim();
+    //if (!userTweet) {
+      //return;
+    //}
+    //fetch(`/api/tweets`, {
+      //method: "POST",
+      //mode: "cors",
+      //headers: { "Content-Type": "application/json" },
+      //body: JSON.stringify({
+        //message: {
+          //content: userTweet
+        //}
+      //}),
+    //}).then((data) => {
+        //console.log('success');
+        //this.setState({userTweet:''});
+      //})
+      //.catch((error) => {
+        //this.setState({ error: error.message });
+        //console.log(error);
+      //})
+  }
 
   render () {
-    const {currentUser} = this.state;
+    const {currentUser, userTweet, charNumber} = this.state;
 
     return (
       <Navbar>
@@ -78,11 +124,13 @@ componentDidMount () {
             </div>
             <div className="col-xs-6 feed-box">
               <div className="col-xs-12 post-tweet-box">
-                <textarea type="text" className="form-control post-input" rows="3" placeholder="What's happening?"></textarea>
-                <div className="pull-right">
-                  <span className="post-char-counter">140</span>
-                  <button className="btn btn-primary" disabled id="post-tweet-btn">Tweet</button>
-                </div>
+                <form onSubmit={this.handleSubmit} className="form-inline my-4">
+                  <input type="text" className="form-control" placeholder="What's happening?" value={userTweet} onChange={this.handleChange} name="userTweet" required/>
+                  <div className="pull-right">
+                    <span className="post-char-counter">140</span>
+                    <button className="btn btn-primary" id="post-tweet-btn">Tweet</button>
+                  </div>
+                </form>
               </div>
               <div className="feed">
                 <div className="tweet col-xs-12">
