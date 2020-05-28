@@ -51,8 +51,7 @@ handleChange(event) {
   this.setState({ [name]: value });
 }
 
-handleLogin(event) {
-  event.preventDefault();
+createSession () {
   const { login_username, login_password } = this.state;
 
   fetch(`/api/sessions`, safeCredentials({
@@ -71,12 +70,17 @@ handleLogin(event) {
   })
 }
 
+handleLogin(event) {
+  event.preventDefault();
+  this.createSession();
+}
+
 handleSignup(event) {
   event.preventDefault();
   const { signup_email, signup_password, signup_username } = this.state;
 
-  let login_username = signup_username;
-  let login_password = signup_password;
+  this.setState({login_username: signup_username});
+  this.setState({login_password: signup_password});
 
   fetch(`/api/users`, safeCredentials({
     method: 'POST',
@@ -92,21 +96,7 @@ handleSignup(event) {
   .then(res => {
     console.log(res);
     console.log(signup_email, signup_password, signup_username);
-
-    fetch(`/api/sessions`, safeCredentials({
-      method: 'POST',
-      body: JSON.stringify({
-        user: {
-          username: login_username,
-          password: login_password
-        }
-      })
-    }))
-    .then(handleErrors)
-    .then(res => {
-      console.log(res);
-        window.location.replace("/feeds");
-    })
+    this.createSession();
   })
 }
 
