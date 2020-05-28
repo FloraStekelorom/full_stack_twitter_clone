@@ -75,6 +75,9 @@ handleSignup(event) {
   event.preventDefault();
   const { signup_email, signup_password, signup_username } = this.state;
 
+  let login_username = signup_username;
+  let login_password = signup_password;
+
   fetch(`/api/users`, safeCredentials({
     method: 'POST',
     body: JSON.stringify({
@@ -89,6 +92,21 @@ handleSignup(event) {
   .then(res => {
     console.log(res);
     console.log(signup_email, signup_password, signup_username);
+
+    fetch(`/api/sessions`, safeCredentials({
+      method: 'POST',
+      body: JSON.stringify({
+        user: {
+          username: login_username,
+          password: login_password
+        }
+      })
+    }))
+    .then(handleErrors)
+    .then(res => {
+      console.log(res);
+        window.location.replace("/feeds");
+    })
   })
 }
 
