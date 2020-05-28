@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import Navbar from './navbar';
 import { safeCredentials, handleErrors } from './utils/fetchHelper';
 
-
 import './feeds.scss';
 
 class Feed extends React.Component {
@@ -12,15 +11,34 @@ class Feed extends React.Component {
     this.state = {
       currentUser: 'User',
       userTweet: '',
+      tweets: [],
       charCount: 0,
       tweetButton: true,
     }
-    this.countChar = this.countChar.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.displayUsername = this.displayUsername.bind(this);
+    this.countChar = this.countChar.bind(this);
+    this.postTweet = this.postTweet.bind(this);
+    this.getTweets = this.getTweets.bind(this);
   }
 
   componentDidMount () {
+    this.getTweets();
+    this.displayUsername();
+  }
+
+  handleChange(event) {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.postTweet();
+  }
+
+  displayUsername() {
     fetch(`/api/authenticated`, safeCredentials({
       method: 'GET',
     }))
@@ -29,11 +47,6 @@ class Feed extends React.Component {
       console.log(res);
       this.setState({ currentUser: res.username });
     })
-  }
-
-  handleChange(event) {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
   }
 
   countChar() {
@@ -46,41 +59,50 @@ class Feed extends React.Component {
     if (charCount > 0 && charCount <= 140) {
       this.setState({tweetButton:false});
       console.log(charCount);
+      this.setState({charCount: userTweet.length})
+      this.setState({userTweet: userTweet.trim()})
     } else {
       console.log(charCount);
       this.setState({tweetButton:true});
     }
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  postTweet() {
+    let userTweet = this.state;
 
-    //let {userTweet} = this.state;
-    //userTweet = userTweet.trim();
-    //if (!userTweet) {
-      //return;
-    //}
-    //fetch(`/api/tweets`, {
-      //method: "POST",
-      //mode: "cors",
-      //headers: { "Content-Type": "application/json" },
-      //body: JSON.stringify({
-        //message: {
-          //content: userTweet
-        //}
-      //}),
-    //}).then((data) => {
-        //console.log('success');
-        //this.setState({userTweet:''});
-      //})
-      //.catch((error) => {
-        //this.setState({ error: error.message });
-        //console.log(error);
-      //})
+    fetch(`/api/tweets`, safeCredentials({
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tweet: {
+          message: userTweet,
+        }
+      })
+    })).then((data) => {
+        console.log('success');
+        this.setState({userTweet:''});
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  getTweets() {
+    let tweets = this.state;
+
+    fetch(`/api/tweets`, {
+      method: 'GET',
+    })
+    .then(handleErrors)
+    .then(res => {
+      console.log('success');
+      this.setState({tweets: res.tweets});
+    })
   }
 
   render () {
-    const {currentUser, userTweet, charCount, tweetButton } = this.state;
+    const {currentUser, userTweet, charCount, tweetButton, tweets } = this.state;
 
     return (
       <Navbar>
