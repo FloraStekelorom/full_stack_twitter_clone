@@ -19,7 +19,6 @@ componentDidMount () {
   }))
   .then(handleErrors)
   .then(res => {
-    console.log(res);
     this.setState({ currentUser: res.username });
   })
 }

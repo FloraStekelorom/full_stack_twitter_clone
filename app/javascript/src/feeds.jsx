@@ -5,6 +5,25 @@ import { safeCredentials, handleErrors } from './utils/fetchHelper';
 
 import './feeds.scss';
 
+
+class Tweet extends React.Component {
+  render () {
+
+    const { tweet, onDelete } = this.props;
+    const { id, message } = tweet;
+
+    return (
+      <div className="row mb-1">
+        <p className="col">{message}</p>
+        <button
+          onClick={() => onDelete(id)}
+        >Delete</button>
+      </div>
+    )
+  }
+}
+
+
 class Feed extends React.Component {
   constructor(props) {
     super(props);
@@ -21,11 +40,12 @@ class Feed extends React.Component {
     this.countChar = this.countChar.bind(this);
     this.postTweet = this.postTweet.bind(this);
     this.getTweets = this.getTweets.bind(this);
+    this.deleteTweet = this.deleteTweet.bind(this);
   }
 
   componentDidMount () {
-    this.getTweets();
     this.displayUsername();
+    this.getTweets();
   }
 
   handleChange(event) {
@@ -44,8 +64,18 @@ class Feed extends React.Component {
     }))
     .then(handleErrors)
     .then(res => {
-      console.log(res);
       this.setState({ currentUser: res.username });
+    })
+  }
+
+  getTweets() {
+    fetch(`/api/tweets`, {
+      method: 'GET',
+    })
+    .then(handleErrors)
+    .then(res => {
+      console.log(res);
+      this.setState({tweets: res.tweets})
     })
   }
 
@@ -56,23 +86,25 @@ class Feed extends React.Component {
     let {charCount} = this.state;
     charCount =  userTweet.length;
 
+    let {tweetButton} = this.state;
+
     if (charCount > 0 && charCount <= 140) {
-      this.setState({tweetButton:false});
-      console.log(charCount);
       this.setState({charCount: userTweet.length})
       this.setState({userTweet: userTweet.trim()})
-    } else {
+      this.setState({tweetButton: false});
       console.log(charCount);
+      console.log(userTweet);
+    } else {
       this.setState({tweetButton:true});
     }
   }
 
   postTweet() {
-    let userTweet = this.state;
+    let {userTweet} = this.state;
 
     fetch(`/api/tweets`, safeCredentials({
       method: "POST",
-      mode: "cors",
+      mode:"cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         tweet: {
@@ -82,23 +114,27 @@ class Feed extends React.Component {
     })).then((data) => {
         console.log('success');
         this.setState({userTweet:''});
+        this.getTweets();
       })
       .catch((error) => {
         console.log(error);
       })
   }
 
-  getTweets() {
-    let tweets = this.state;
+  deleteTweet(id) {
+    if(!id) {
+      console.log("no tweet id");
+    }
 
-    fetch(`/api/tweets`, {
-      method: 'GET',
-    })
-    .then(handleErrors)
-    .then(res => {
-      console.log('success');
-      this.setState({tweets: res.tweets});
-    })
+    fetch(`/api/tweets/:id`, safeCredentials({
+      method: "DELETE",
+    })).then((data) => {
+        console.log('success');
+        this.getTweets();
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   render () {
@@ -163,24 +199,14 @@ class Feed extends React.Component {
                 </form>
               </div>
               <div className="feed">
-                <div className="tweet col-xs-12">
-                  <a className="tweet-username" href="#">{currentUser}</a>
-                  <a className="tweet-screenName" href="#">@{currentUser}</a>
-                  <p>This is an amazing tweet</p>
-                  <a className="delete-tweet" href="#">Delete</a>
-                </div>
-                <div className="tweet col-xs-12">
-                  <a className="tweet-username" href="#">{currentUser}</a>
-                  <a className="tweet-screenName" href="#">@{currentUser}</a>
-                  <p>This is an amazing tweet</p>
-                  <a className="delete-tweet" href="#">Delete</a>
-                </div>
-                <div className="tweet col-xs-12">
-                  <a className="tweet-username" href="#">{currentUser}</a>
-                  <a className="tweet-screenName" href="#">@{currentUser}</a>
-                  <p>This is an amazing tweet</p>
-                  <a className="delete-tweet" href="#">Delete</a>
-                </div>
+                {tweets.length > 0 ? tweets.map((tweet) => {
+                  return (<Tweet
+                    key={tweet.id}
+                    tweet={tweet}
+                    onDelete={this.deleteTweet}
+                  />);
+                }) : <p>no tweets here</p>}
+
               </div>
             </div>
             <div className="col-xs-3 follow-suggest">
