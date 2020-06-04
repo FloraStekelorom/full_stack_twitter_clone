@@ -91,31 +91,31 @@
   color: #8899a6;
 }
 
-.tweet {
+.tweetBox {
   background: #fff;
   border: 1px solid #BFE0EC;
   border-top: none;
   padding: 10px 10px;
 }
 
-.tweet-username {
+.tweetUsername {
   font-size: 14px;
   font-weight: bold;
   color: #292f33;
 }
 
-.tweet-screenName {
+.screenName {
   color: #b1bbc3;
   text-decoration: none;
   font-size: 13px;
 }
 
-.tweet-screenName:hover {
+.screenName:hover {
   text-decoration: none;
   color: #b1bbc3;
 }
 
-.tweet p {
+.tweetBox p {
   margin-bottom: 0;
 }
 

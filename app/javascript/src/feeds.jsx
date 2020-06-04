@@ -10,14 +10,14 @@ class Tweet extends React.Component {
   render () {
 
     const { tweet, onDelete } = this.props;
-    const { id, message } = tweet;
+    const { id, message, username } = tweet;
 
     return (
-      <div className="row mb-1">
-        <p className="col">{message}</p>
-        <button
-          onClick={() => onDelete(id)}
-        >Delete</button>
+      <div className="tweetBox col-xs-12">
+        <a className="tweetUsername" href="#">{username}</a>
+        <a className="screenName" href="#">  @{username}</a>
+        <p>{message}</p>
+        <a className="delete-tweet" onClick={() => onDelete(id)}>Delete</a>
       </div>
     )
   }
@@ -126,8 +126,9 @@ class Feed extends React.Component {
       console.log("no tweet id");
     }
 
-    fetch(`/api/tweets/:id`, safeCredentials({
+    fetch(`/api/tweets/${id}`, safeCredentials({
       method: "DELETE",
+      mode:"cors",
     })).then((data) => {
         console.log('success');
         this.getTweets();
