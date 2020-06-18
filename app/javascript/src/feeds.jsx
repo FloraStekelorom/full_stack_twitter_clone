@@ -41,6 +41,8 @@ class Feed extends React.Component {
     this.postTweet = this.postTweet.bind(this);
     this.getTweets = this.getTweets.bind(this);
     this.deleteTweet = this.deleteTweet.bind(this);
+    //this.filterTweets = this.filterTweets.bind(this);
+    //this.fileInput = React.createRef();
   }
 
   componentDidMount () {
@@ -92,15 +94,16 @@ class Feed extends React.Component {
       this.setState({charCount: userTweet.length})
       this.setState({userTweet: userTweet.trim()})
       this.setState({tweetButton: false});
-      console.log(charCount);
-      console.log(userTweet);
+      //console.log(charCount);
+      //console.log(userTweet);
     } else {
       this.setState({tweetButton:true});
     }
   }
 
   postTweet() {
-    let {userTweet} = this.state;
+    const {userTweet} = this.state;
+    //let userFile = ${this.fileInput.current.files[0]};
 
     fetch(`/api/tweets`, safeCredentials({
       method: "POST",
@@ -109,6 +112,7 @@ class Feed extends React.Component {
       body: JSON.stringify({
         tweet: {
           message: userTweet,
+          //image: userFile,
         }
       })
     })).then((data) => {
@@ -129,6 +133,7 @@ class Feed extends React.Component {
     fetch(`/api/tweets/${id}`, safeCredentials({
       method: "DELETE",
       mode:"cors",
+      headers: { "Content-Type": "application/json" },
     })).then((data) => {
         console.log('success');
         this.getTweets();
@@ -138,8 +143,20 @@ class Feed extends React.Component {
       })
   }
 
+  //filterTweets(username) {
+
+    //fetch(`api/users/username/tweets`, {
+      //method: 'GET',
+    //})
+    //.then(handleErrors)
+    //.then(res => {
+      //console.log(res);
+      //this.setState({tweets: res.tweets})
+    //})
+  //}
+
   render () {
-    const {currentUser, userTweet, charCount, tweetButton, tweets } = this.state;
+    const {currentUser, userTweet, charCount, tweetButton, tweets} = this.state;
 
     return (
       <Navbar>
@@ -149,7 +166,7 @@ class Feed extends React.Component {
               <div className="profileCard col-xs-12">
                 <div className="profileCard-content">
                   <div className="user-field col-xs-12">
-                    <a className="username" href="#">{currentUser}</a><br/>
+                    <a className="username" href={`/${currentUser}`}>{currentUser}</a><br/>
                     <a className="screenName" href="#">@{currentUser}</a>
                   </div>
                   <div className="user-stats">
@@ -192,9 +209,10 @@ class Feed extends React.Component {
             <div className="col-xs-6 feed-box">
               <div className="col-xs-12 post-tweet-box">
                 <form onSubmit={this.handleSubmit} className="form-inline my-4">
-                  <input type="text" className="form-control" placeholder="What's happening?" value={userTweet} onKeyUp={this.countChar} onChange={this.handleChange} name="userTweet" required/>
+                  <input type="text" className="form-control" placeholder="What's happening?" value={userTweet} onKeyUp={this.countChar} onChange={this.handleChange} name="userTweet" required/><br/>
                   <div className="pull-right">
-                    <span className="post-char-counter">140</span>
+                    //<label id="upload-image-btn" htmlFor="image-select">Upload image</label>
+                    //<input type="file" id="image-select" name="image" ref={this.fileInput} accept="image/*" />
                     <button className="btn btn-primary" disabled={tweetButton} id="post-tweet-btn">Tweet</button>
                   </div>
                 </form>

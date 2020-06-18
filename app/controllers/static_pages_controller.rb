@@ -13,6 +13,16 @@ class StaticPagesController < ApplicationController
     end
   end
 
+  def userpage
+    signed_in = authenticated
+
+    if signed_in
+      render 'userpage'
+    else
+      redirect_to '/home'
+    end
+  end
+
   private
 
   def authenticated

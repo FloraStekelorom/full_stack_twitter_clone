@@ -1,4 +1,4 @@
-#feedPage {
+#userPage {
   min-height: calc(100vh - 51px);
   margin-top: 50px;
   padding-left: 60px;
@@ -18,6 +18,7 @@
 
 .user-field .username {
   font-weight: 700;
+  text-decoration: none;
   font-size: 18px;
   color: inherit !important;
 }
@@ -26,7 +27,6 @@
   color: #66757f;
   font-size: 12px;
   line-height: 16px;
-  text-decoration: none;
 }
 
 .user-stats div {

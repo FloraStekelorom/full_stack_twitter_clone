@@ -29,6 +29,7 @@ Rails.application.configure do
   config.action_controller.allow_forgery_protection = false
   config.action_mailer.perform_caching = false
 
+  # Using the test settings for Active Storage
   config.active_storage.service = :test
 
   # Tell Action Mailer not to deliver emails to the real world.

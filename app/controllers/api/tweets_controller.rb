@@ -41,7 +41,7 @@ module Api
 
       if user
         @tweets = user.tweets
-        render 'api/tweets/index'
+        render 'api/users/index'
       end
     end
 
